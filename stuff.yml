@@ -1,0 +1,5 @@
+---
+- name: process aws
+  import_role:
+    name: aws
+  tags: configuration
