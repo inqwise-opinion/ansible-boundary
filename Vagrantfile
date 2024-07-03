@@ -2,19 +2,8 @@
 # vi: set ft=ruby :
 
 # vagrant plugin install vagrant-aws 
-# vagrant up --provider=aws
-# vagrant destroy -f && vagrant up --provider=aws
-
-# Vagrant.configure("2") do |config|
-#   config.vm.provision "ansible_local" do |ansible|
-#     ansible.playbook = "main.yml"
-#     ansible.install_mode = "pip"
-#     ansible.pip_install_cmd = "curl https://bootstrap.pypa.io/get-pip.py | sudo python3"
-#     ansible.pip_args = "-r /vagrant/requirements.txt"
-#     ansible.galaxy_roles_path = "/vagrant/ansible-galaxy/roles"
-#     ansible.galaxy_role_file = "requirements.yml"
-
-#   end
+# SHARE_COLLECTION_FOLDER='[path to folder]' vagrant up --provider=aws
+# vagrant destroy -f &&  SHARE_COLLECTION_FOLDER='[path to folder]' vagrant up --provider=aws
 
 AWS_REGION = "il-central-1"
 Vagrant.configure("2") do |config|
@@ -27,7 +16,7 @@ Vagrant.configure("2") do |config|
     export VAULT_PASSWORD=#{`op read "op://Security/ansible-vault inqwise-stg/password"`.strip!}
     echo "$VAULT_PASSWORD" > vault_password
     export ANSIBLE_VERBOSITY=0
-    bash main.sh -e "private_dns=boundary discord_message_owner_name=#{Etc.getpwuid(Process.uid).name} aws_iam_role=boundary-role" -r "#{AWS_REGION}"
+    bash main.sh -e "playbook_name=boundary-test private_dns=boundary discord_message_owner_name=#{Etc.getpwuid(Process.uid).name} aws_iam_role=boundary-role" -r "#{AWS_REGION}"
   SHELL
 
   config.vm.provider :aws do |aws, override|
@@ -54,5 +43,6 @@ Vagrant.configure("2") do |config|
     aws.tags = {
       Name: "boundary-test-#{Etc.getpwuid(Process.uid).name}"
     }
+
   end
 end

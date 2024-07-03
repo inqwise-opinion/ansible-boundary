@@ -1,4 +1,4 @@
-- name: boundary
+- name: "{{ playbook_name }}"
   hosts: all
   become: yes  # Use sudo to execute tasks
       

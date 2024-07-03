@@ -3,3 +3,12 @@
   import_role:
     name: aws
   tags: configuration
+
+- name: Process boundary
+  import_role:
+    name: boundary
+  tags: boundary
+  vars:
+    boundary_version: worker-hcp
+    groups:
+      boundary_controllers: true
