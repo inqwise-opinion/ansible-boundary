@@ -3,12 +3,45 @@
   import_role:
     name: aws
   tags: configuration
+  vars:
+    dns_record_list:
+    - name: "{{ private_dns }}.{{ private_domain }}"
+      zone: "{{ private_domain }}"
+      type: A
+      value: "{{ private_ip }}"
+      private: true
+      ttl: 120
+    - name: "boundary.{{ public_domain }}"
+      zone: "{{ public_domain }}"
+      type: A
+      value: "{{ ec2_instance.public_ip }}"
+      private: false
+      ttl: 120
 
 - name: Process boundary
   import_role:
     name: boundary
   tags: boundary
   vars:
-    boundary_version: worker-hcp
-    groups:
-      boundary_controllers: true
+    boundary_version: enterprise
+    hcp_boundary_cluster_id: "b5201435-e3c0-4792-b100-c360218e1381"
+    boundary_address: "0.0.0.0"
+    boundary_worker_parameters:
+      public_addr: "boundary.inqwise-stg.com"
+      auth_storage_path: "/data/worker-storage"
+    
+
+# hcp_boundary_cluster_id = "opinion-stg"
+
+# listener "tcp" {
+#   address = "0.0.0.0:9202"
+#   purpose = "proxy"
+# }
+        
+# worker {
+#   public_addr = "boundary.inqwise-stg.com"
+#   auth_storage_path = "/etc/boundary.d/worker1"
+#   tags {
+#     key = ["<tag1>", "<tag2>"]
+#   }
+# }
