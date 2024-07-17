@@ -41,7 +41,8 @@ Vagrant.configure("2") do |config|
     aws.associate_public_ip = true
     aws.iam_instance_profile_name = "bootstrap-role"
     aws.tags = {
-      Name: "boundary-test-#{Etc.getpwuid(Process.uid).name}"
+      Name: "boundary-test-#{Etc.getpwuid(Process.uid).name}",
+      private_dns: "boundary-test-#{Etc.getpwuid(Process.uid).name}"
     }
 
   end
